@@ -1,0 +1,18 @@
+{
+  "pemasukan": [],
+  "pengeluaran": [],
+  "kategori": [
+    {
+      "id": 1,
+      "nama": "tes",
+      "deskripsi": "",
+      "created_at": "2025-11-09"
+    },
+    {
+      "id": 2,
+      "nama": "nibba",
+      "deskripsi": "",
+      "created_at": "2025-11-09"
+    }
+  ]
+}
