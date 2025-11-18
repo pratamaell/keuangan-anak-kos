@@ -19,7 +19,6 @@ from modules.laporan import (
     tampilkan_tabel
 )
 from modules.fitur import (
-    export_laporan_txt_csv,
     budget_alert_monthly,
     cari_transaksi,
     sort_transaksi
@@ -290,27 +289,19 @@ def menu_laporan():
 def menu_fitur():
     while True:
         print("\n=== FITUR TAMBAHAN ===")
-        print("1. Export laporan (TXT + CSV) - Bulanan")
-        print("2. Budget alert (cek anggaran bulanan)")
-        print("3. Pencarian transaksi")
-        print("4. Sortir transaksi")
+        print("1. Budget alert (cek anggaran bulanan)")
+        print("2. Pencarian transaksi")
+        print("3. Sortir transaksi")
         print("0. Kembali")
 
         pilih = input("Pilih fitur: ")
 
         if pilih == "1":
-            bulan = int(input("Bulan (1-12): "))
-            tahun = int(input("Tahun: "))
-            base = input("Nama file (tanpa ekstensi, default 'laporan'): ") or "laporan"
-            export_laporan_txt_csv(bulan, tahun, base)
-            print("Export selesai.")
-
-        elif pilih == "2":
             limit = int(input("Masukkan batas anggaran bulanan (Rp): "))
             msg = budget_alert_monthly(limit)
             print(msg)
 
-        elif pilih == "3":
+        elif pilih == "2":
             q = input("Masukkan kata kunci / ID: ")
             results = cari_transaksi(q)
             print("\n--- Hasil Pencarian ---")
@@ -320,7 +311,7 @@ def menu_fitur():
                 for r in results:
                     print(f"{r['type']} {r['id']}: {r.get('tanggal','-')} | Rp{r['jumlah']} | Kategori {r['kategori_id']} | {r.get('catatan','')}")
             
-        elif pilih == "4":
+        elif pilih == "3":
             print("Field untuk diurutkan: tanggal, jumlah, kategori_id, id, type")
             by = input("Urut berdasarkan (default 'tanggal'): ") or "tanggal"
             order = input("Urutkan (asc/desc, default asc): ") or "asc"
