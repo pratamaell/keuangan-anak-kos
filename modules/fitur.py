@@ -1,9 +1,41 @@
 from datetime import datetime
+import csv
+import os
+
 from modules.pemasukan import list_pemasukan
 from modules.pengeluaran import list_pengeluaran
 from modules.laporan import laporan_bulanan
 
 
+def export_laporan_txt_csv(bulan, tahun, base_filename="laporan"):
+    laporan = laporan_bulanan(bulan, tahun)
+    txt_path = f"{base_filename}_{bulan:02d}_{tahun}.txt"
+    csv_path = f"{base_filename}_{bulan:02d}_{tahun}.csv"
+
+    # TXT
+    with open(txt_path, "w", encoding="utf-8") as f:
+        f.write(f"LAPORAN BULANAN {bulan}/{tahun}\n\n")
+        f.write("PEMASUKAN\n")
+        for p in laporan["pemasukan"]:
+            f.write(f"{p.get('id')} | {p.get('tanggal','-')} | Rp{p.get('jumlah')} | {p.get('catatan','')}\n")
+        f.write(f"Total Pemasukan: Rp{laporan['total_pemasukan']}\n\n")
+
+        f.write("PENGELUARAN\n")
+        for p in laporan["pengeluaran"]:
+            f.write(f"{p.get('id')} | {p.get('tanggal','-')} | Rp{p.get('jumlah')} | {p.get('catatan','')}\n")
+        f.write(f"Total Pengeluaran: Rp{laporan['total_pengeluaran']}\n\n")
+        f.write(f"Saldo: Rp{laporan['saldo']}\n")
+
+    # CSV (gabung pemasukan & pengeluaran dengan kolom type)
+    with open(csv_path, "w", newline='', encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["type","id","tanggal","jumlah","kategori_id","catatan"])
+        for p in laporan["pemasukan"]:
+            writer.writerow(["pemasukan", p.get("id"), p.get("tanggal",""), p.get("jumlah"), p.get("kategori_id"), p.get("catatan","")])
+        for p in laporan["pengeluaran"]:
+            writer.writerow(["pengeluaran", p.get("id"), p.get("tanggal",""), p.get("jumlah"), p.get("kategori_id"), p.get("catatan","")])
+
+    return txt_path, csv_path
 
 def budget_alert_monthly(limit, bulan=None, tahun=None):
     now = datetime.now()
